@@ -2,6 +2,7 @@ package com.skilldistillery.events.entities;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,7 @@ public class Watering {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private int id;
+	@Column(name= "is_rain")
 	private boolean isRain;//Rain or Manmade Watering
 	private LocalDate date;
 	private Double inches;

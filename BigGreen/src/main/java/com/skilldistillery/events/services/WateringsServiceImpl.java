@@ -23,7 +23,14 @@ public class WateringsServiceImpl implements WateringsService {
 
 	@Override
 	public Watering showByWateringId(int wateringId) {
-		return repo.getOne(wateringId);
+		Optional<Watering> waterOpt = repo.findById(wateringId);
+		Watering water =null;
+		if(waterOpt.isPresent()) {
+			water = waterOpt.get();
+			
+		}
+		return water;
+
 	}
 
 	@Override

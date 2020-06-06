@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `waterings` ;
 
 CREATE TABLE IF NOT EXISTS `waterings` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `isRain` TINYINT NULL,
+  `is_rain` TINYINT NULL,
   `date` DATETIME NULL,
   `inches` DOUBLE NULL,
   `duration` DOUBLE NULL,
@@ -46,10 +46,10 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `biggreendb`;
-INSERT INTO `waterings` (`id`, `isRain`, `date`, `inches`, `duration`, `observations`) VALUES (1, 0, '2020-05-31', .25, 0.5, 'The perimeter grass near the flower beds is going dormant. Weeds in back yard');
-INSERT INTO `waterings` (`id`, `isRain`, `date`, `inches`, `duration`, `observations`) VALUES (2, 1, '2020-06-02', .5, 1.5, 'Flooding in the low area of the back yard. Some flowerbed erosion.');
-INSERT INTO `waterings` (`id`, `isRain`, `date`, `inches`, `duration`, `observations`) VALUES (3, 0, '2020-06-04', 0.1, .15, 'Spot treated some higher areas of dormant grass');
-INSERT INTO `waterings` (`id`, `isRain`, `date`, `inches`, `duration`, `observations`) VALUES (4, 1, '2020-06-05', 0.05, .5, 'Light drizzle, during a high humidity time. Might not have made it to the roots. ');
+INSERT INTO `waterings` (`id`, `is_rain`, `date`, `inches`, `duration`, `observations`) VALUES (1, 0, '2020-05-31', .25, 0.5, 'The perimeter grass near the flower beds is going dormant. Weeds in back yard');
+INSERT INTO `waterings` (`id`, `is_rain`, `date`, `inches`, `duration`, `observations`) VALUES (2, 1, '2020-06-02', .5, 1.5, 'Flooding in the low area of the back yard. Some flowerbed erosion.');
+INSERT INTO `waterings` (`id`, `is_rain`, `date`, `inches`, `duration`, `observations`) VALUES (3, 0, '2020-06-04', 0.1, .15, 'Spot treated some higher areas of dormant grass');
+INSERT INTO `waterings` (`id`, `is_rain`, `date`, `inches`, `duration`, `observations`) VALUES (4, 1, '2020-06-05', 0.05, .5, 'Light drizzle, during a high humidity time. Might not have made it to the roots. ');
 
 COMMIT;
 
