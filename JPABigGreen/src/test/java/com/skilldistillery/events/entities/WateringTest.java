@@ -2,6 +2,8 @@ package com.skilldistillery.events.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -12,11 +14,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class EventTest {
+class WateringTest {
 
 	private static EntityManagerFactory emf;
 	private EntityManager em;
-	private Event event;
+	private Watering watering;
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -31,19 +33,24 @@ class EventTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		em= emf.createEntityManager();
-		event = em.find(Event.class, 1);
+		watering = em.find(Watering.class, 1);
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
 		em.close();
-		event= null;
+		watering= null;
 	}
 
 	@Test
 	void test() {
-		assertNotNull(event);
-		assertEquals("0.5", event.getInches() );
+		assertNotNull(watering);
+		assertEquals(false, watering.isRain());
+		assertEquals(LocalDate.parse("2020-05-31"), watering.getDate());
+		assertEquals(0.25, watering.getInches());
+		assertEquals(0.5, watering.getDuration());
+		assertEquals("The perimeter grass near the flower beds is going dormant. Weeds in back yard", watering.getObservations());
+		
 	}
 
 }
