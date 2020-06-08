@@ -40,7 +40,7 @@
 
 ## Default Inserts
 
-![Waterings Data](https://github.com/mikematosky/EventTrackerProject/blob/master/watering_table.png)
+![Waterings Data](https://github.com/mikematosky/EventTrackerProject/blob/master/waterings_inserts.png)
 
 
 ## Technologies Used
