@@ -26,13 +26,49 @@ public class WateringController {
 	private WateringsService service;
 
 	@GetMapping("waterings")
-	public List<Watering> index(){
-		return service.showAll();
+	public List<Watering> index(HttpServletRequest request, HttpServletResponse response){
+		
+		try {
+			List<Watering> waterings = service.showAll();
+			if(waterings== null) {
+				response.setStatus(404);
+			}
+			else {
+				response.setStatus(200);
+			}
+			return waterings;
+		}
+		catch(Exception e) {
+			response.setStatus(400);
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	@GetMapping("waterings/{id}")
-	public Watering findById(@PathVariable Integer id) {
-		return service.showByWateringId(id);
+	public Watering findById(@PathVariable Integer id, HttpServletRequest request, HttpServletResponse response) {
+		
+		try {
+			StringBuffer url = request.getRequestURL();
+			Watering watering = service.showByWateringId(id);
+			//No Id of 0
+			if(watering.getId() == 0) {
+				url.append("/WateringNotFound");
+				System.err.println(url);
+				response.setHeader("Location", url.toString());
+				response.setStatus(404);
+				return null;
+			} else {
+				response.setStatus(200);
+				return watering;
+			}
+		}
+		catch(Exception e) {
+			response.setStatus(400);
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 
 	@PostMapping("waterings")
