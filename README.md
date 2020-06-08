@@ -6,7 +6,7 @@
 * Lawncare Watering App
 * An app to track the water intake of a lawn whether it's from rain or from a hose.
 
-![Watering Entity](https://github.com/mikematosky/EventTrackerProject/watering_table.png?raw=true)
+![Watering Entity](https://github.com/mikematosky/EventTrackerProject/blob/master/watering_table.png)
 
 
 
