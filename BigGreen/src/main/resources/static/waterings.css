@@ -1,0 +1,28 @@
+#WateringTable {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid darkblue;
+    width: auto;
+}
+
+  #WateringTable td, #WateringTable th{
+      border: 1px solid darkcyan;
+      padding: 7px;
+  }
+
+  #WateringTable td:nth-child(even){
+      background-color: lightseagreen;
+  }
+
+  #WateringTable td:hover{
+      background-color: darkcyan;
+      font-weight: bold;
+      color: white;
+  }
+
+  #WateringTable th{
+    padding-bottom: 10px;  
+    padding-top: 10px;
+    text-align: center;
+
+  }

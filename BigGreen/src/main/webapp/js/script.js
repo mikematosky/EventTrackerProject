@@ -4,6 +4,9 @@ window.addEventListener('load', function(){
 
 function init(){
 	console.log('script.js loaded');
+	getAllWaterings();
+
+
 	document.wateringForm.wateringSearch.addEventListener('click', function(e){
 		e.preventDefault();
 		
@@ -16,7 +19,60 @@ function init(){
 		}
 	});
 	//TODO Everything
-}
+};
+
+function getAllWaterings(){
+	let xhr= new XMLHttpRequest();
+	xhr.open('GET', 'api/waterings/');
+	xhr.onreadystatechange = function(){
+		if(xhr.readyState === 4){
+			if(xhr.status === 200){
+				let wateringsJSON= xhr.responseText;
+				let waterings = JSON.parse(wateringsJSON);
+				makeTable(waterings);
+				console.log(waterings);
+			}
+			else{
+				let errorDiv= document.getElementById("errorDiv");
+				errorDiv.textContent = 'All Waterings Not Found';
+			}
+		}
+	}
+	xhr.send();
+};
+
+function makeTable(wateringsData){
+	//create table
+	let tableDiv = document.getElementById("WateringsTable");
+	let table= document.createElement('table');
+	tableDiv.appendChild(table);
+	//create header
+	let header= document.createElement('thead');
+	header.textContent= "Waterings";
+	table.appendChild(header);
+	//create body
+	let body= document.createElement('tbody');
+	table.appendChild(body);
+	//Append rows to body
+	let count= 0;
+	for(watering in wateringsData){
+		let thisRow= document.createElement('tr');
+		let thisTd= document.createElement('td'); 
+			
+		thisTd.textContent= watering.date;
+
+		thisRow.appendChild(thisTd);
+		table.appendChild(thisRow);
+
+		count++;
+	}
+	//Append table count row
+	let finalRow = document.createElement('tr');
+	let countTd= document.createElement('td');
+	countTd.textContent= "Total entries: "+count;
+
+};
+
 
 function getWateringDetails(wateringID){
 	let xhr= new XMLHttpRequest();
@@ -45,14 +101,14 @@ function displayAWatering(watering){
 	console.log('there is a watering');
 	let thisWatering = document.getElementById("WateringDetails");
 	console.log(thisWatering);
-	var h1= document.createElement('h1');
+	var h2= document.createElement('h2');
 	let ul= document.createElement('ul');
 	let li1= document.createElement('li');
 	let li2= document.createElement('li');
 	let li3= document.createElement('li');
 	
-	h1.textContent= watering.date;
-	thisWatering.appendChild(h1);
+	h2.textContent= watering.date;
+	thisWatering.appendChild(h2);
 	
 	
 	let isRain;
