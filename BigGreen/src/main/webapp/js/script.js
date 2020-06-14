@@ -4,22 +4,28 @@ window.addEventListener('load', function(){
 
 function init(){
 	console.log('script.js loaded');
+	
 	getAllWaterings();
+	document.searchForm.wateringSearch.addEventListener('click', searchWaterings);
+	document.entryForm.submit.addEventListener('click', postOrPut);
+	
+	
+}
 
+function searchWaterings(){
+	e.preventDefault();
+	
+	let searchID= document.searchForm.searchID.value;
 
-	document.wateringForm.wateringSearch.addEventListener('click', function(e){
-		e.preventDefault();
-		
-		let wateringID= document.wateringForm.wateringID.value;
-
-		//greater than 0 and is a number
-		if(wateringID > 0 && !isNaN(wateringID)){
-			console.log('watering '+wateringID);
-			getWateringDetails(wateringID);//still need to error check for nulls
-		}
-	});
+	//greater than 0 and is a number
+	if(searchID > 0 && !isNaN(searchID)){
+		console.log('watering '+searchID);
+		getWateringDetails(searchID);//still need to error check for nulls
+	}
 	//TODO Everything
 };
+
+var waterings;
 
 function getAllWaterings(){
 	let xhr= new XMLHttpRequest();
@@ -28,7 +34,7 @@ function getAllWaterings(){
 		if(xhr.readyState === 4){
 			if(xhr.status === 200){
 				let wateringsJSON= xhr.responseText;
-				let waterings = JSON.parse(wateringsJSON);
+				waterings = JSON.parse(wateringsJSON);
 				makeTable(waterings);
 				console.log(waterings);
 			}
@@ -129,3 +135,28 @@ function displayAWatering(watering){
 	
 	thisWatering.appendChild(ul);
 }
+
+function postOrPut(){
+	let waterID= entryForm.wateringID.value;
+	let entries= Array.from(waterings);
+	let numOfEntries= entries.length; 
+	if(waterID > 0 && wateringID <= numOfEntries){
+		updateWatering(waterID);
+	}
+	else if(wateringID === null | wateringID > numOfEntries ){
+		createWatering();
+	}
+	else{
+		document.errorDiv.textContent= "Could not Create or Update Error";
+	}
+}
+
+function createWatering(){
+	//TODO
+}
+
+function updateWatering(){
+	//TODO
+}
+
+

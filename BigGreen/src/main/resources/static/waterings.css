@@ -26,3 +26,6 @@
     text-align: center;
 
   }
+#errorDiv{
+    color: red;
+}
