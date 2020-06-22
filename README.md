@@ -2,7 +2,7 @@
 
 ### Week 12-14 Project for Skill Distillery
 
-[Hosted Live on AWS- (WEEK 12)](http://3.22.22.68:8080/BigGreen/api/waterings)
+[Hosted Live on AWS- (WEEK 13)](http://3.22.22.68:8080/BigGreen/api/waterings)
 
 
 ## Overview
