@@ -4,22 +4,10 @@ window.addEventListener('load', function(){
 
 function init(){
 	console.log('script.js loaded');
-	
-	let tableBody = document.getElementsById('tableBody');
-	let tr = document.createElement('tr');
-	let td = document.createElement('td');
-	td. textContent="ALL WATERINGS";
-	tr.appendChild(td);
-	tableBody.appendChild(tr);
-	tableBody.appendChild(document.createElement('hr'));
-
-	document.getElementsById('createWatering').firstElementChild.textContent= 'Add/Edit Watering ';
-	
 	getAllWaterings();
 
 	document.newWatering.createWateringButton.addEventListener('click', createWatering);
-	document.newWatering.editWateringButton.addEventListener('click', changeWatering);
-	document.newWatering.deleteWateringButton.addEventListener('click', deleteWatering);	
+
 };
 
 
@@ -47,135 +35,246 @@ function getAllWaterings(){
 	}
 	xhr.send(null);
 };
-//Table part 1
-function displayAllWaterings(wateringsData){
-	//create table
-	let tableBody= document.getElementsById('tableBody');
-	tableBody.textContent= '';
-	for (let i= 0; i < wateringsData.length; i++){
-		let tr= document.createElement('tr');
-		let td= document.createElement('td');
-		td.textContent= wateringsData[i].date;
-		tr.appendChild(td);
-		tr.wateringId= wateringsData[i].id;
-		tr.addEventListener('click', function(){
-			this.wateringID= wateringsData[i].id;
-			getWateringDetails(this.wateringID);
-		});
-		tableBody.appendChild(tr);
-		tableBody.appendChild(document.createElement('hr'));
-	}
-	let totalRain= document.createElement('input');
-	totalRain.value= 'See Total Rain';
-	totalRain.type='button';
-	totalRain.id= 'showTotal';
-	tableBody.appendChild(totalRain);
-	totalRain.allRain= wateringsData;
-	totalRain.addEventListener('click', showTotalRain);
-	
-};
-//Table part 2 (get total Rain)
-function showTotalRain(){
-	let totalRain= 0;
-	for(let i = 0; i < this.allRain.length; i++){
-		totalRain = totalRain + this.allRain[i].inches;
-	}
-	let showTotal= document.getElementsById('showTotal');
-	showTotal.parentElement.removeChild(showTotal);
-	let tableBody= document.getElementsById('tableBody');
-	let tr = document.createElement('tr');
-	let td = document.createElement('td');
-	td.textContent= "Total Watering: "+totalRain+" inches.";
-	tr.appendChild(td);
-	tableBody.appendChild(tr);
-}
-
-
-///////// GET ONE FOR DETAILS DIV\\\\\\\\\\\\\\\\\
-//From Search by ID I don't think this was a requirement but I used for testing
-function searchWaterings(e){
-	e.preventDefault();
-	
-	let searchID= document.searchForm.searchID.value;
-
-	//greater than 0 and is a number
-	if(searchID > 0 && !isNaN(searchID)){
-		console.log('watering '+searchID);
-		getWateringDetails(searchID);//still need to error check for nulls
-	}
-	//TODO Everything
-};
-//To send to the display div
-function getWateringDetails(wateringID){
+///////// GET ONE \\\\\\\\\\\\\\\\\
+function getWatering(wateringID){
 	let xhr= new XMLHttpRequest();
 	xhr.open('GET', 'api/waterings/' +wateringID);
 	xhr.onreadystatechange = function(){
 		if(xhr.readyState === 4){
 			if(xhr.status === 200) {
-				let wateringJSON= xhr.responseText;
-				var watering = JSON.parse(wateringJSON);//populates global variabl
-				document.getElementById("WateringDetails").textContent= '';
-				displayAWatering(watering);
-				populateAWatering(watering);
-				console.log('watering displayed');
+				var watering = JSON.parse(xhr.responseText);
+				displayWatering(watering);
 			}
 			else{
-				let div = document.getElementById("errorDiv");
-				div.textContent = 'No Watering Found.';
+				let errorSpot = document.getElementById("errorDiv");
+				errorSpot.textContent = 'No Watering Found.';
 			}
 		}
 		
 	}
 	xhr.send();
-}
-//Displays in the display div
-function displayAWatering(watering){
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////TABLE INFO & AGGREGATE Requirement\\\\\\\\\\\\\\\\\\\\
+function displayAllWaterings(waterings){
+	var wateringsList = document.getElementById('wateringsList');
+	wateringsList.textContent= '';
+
+	var wateringTable= document.createElement('table');
+	var wateringTableHead= document.createElement('thead');
+	var wateringTableHeadRow= document.createElement('tr');
+	var wateringTableHeadId= document.createElement('th');
+	var wateringTableHeadDate= document.createElement('th');
+	var wateringTableHeadInches= document.createElement('th');
+	var wateringTableHeadIsRain= document.createElement('th');
+	var wateringTableHeadDuration= document.createElement('th');
+	var wateringTableHeadObservation= document.createElement('th');
+	
+	wateringTableHeadId.textContent= 'Id';
+	wateringTableHeadDate.textContent= 'Date';
+	wateringTableHeadInches.textContent= 'Amount (inches)';
+	wateringTableHeadIsRain.textContent= 'Rain or Hose?';
+	wateringTableHeadDuration.textContent= 'Duration (hours)';
+	wateringTableHeadObservation.textContent= 'Additional Observations';
+
+	wateringsList.appendChild(wateringTable);
+	wateringTable.appendChild(wateringTableHead);
+	wateringTableHead.appendChild(wateringTableHeadRow);
+	wateringTableHeadRow.appendChild(wateringTableHeadId);
+	wateringTableHeadRow.appendChild(wateringTableHeadDate);
+	wateringTableHeadRow.appendChild(wateringTableHeadInches);
+	wateringTableHeadRow.appendChild(wateringTableHeadIsRain);
+	wateringTableHeadRow.appendChild(wateringTableHeadDuration);
+	wateringTableHeadRow.appendChild(wateringTableHeadObservation);
+
+	for(let i=0; i< waterings.length; i++){
+		let row= document.createElement('tr');
+		row.id= waterings[i].id;
+		let wateringId =document.createElement('td');
+		wateringId.textContent= waterings[i].id;
+		let date =document.createElement('td');
+		date.textContent= waterings[i].date;
+		let inches =document.createElement('td');
+		inches.textContent= waterings[i].inches;
+		let isRain =document.createElement('td');
+		isRain.textContent= waterings[i].rain;
+		let duration =document.createElement('td');
+		duration.textContent= waterings[i].duration;
+		let observation =document.createElement('td');
+		observation.textContent= waterings[i].observations;
+
+		row.appendChild(wateringId);
+		row.appendChild(date);
+		row.appendChild(inches);
+		row.appendChild(isRain);
+		row.appendChild(duration);
+		row.appendChild(observation);
+		row.addEventListener('click', function(e){
+			e.preventDefault();
+			getWatering(waterings[i].id);
+		});
+
+		wateringTable.appendChild(row);
+		wateringTable.appendChild(document.createElement('hr'));
+	}
+
+	//Aggregate Watering
+	let totalRow= document.createElement('tr');
+	let totalD= document.createElement('td');
+
+
+	var totalRain= 0;
+	for(let i = 0; i < waterings.length; i++){
+		totalRain = totalRain + waterings[i].inches;
+	}
+
+	totalD.textContent= "Total Watering: "+totalRain+" inches.";
+	totalRow.appendChild(totalD);
+	wateringTable.appendChild(totalRow);
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////// Display A Single Watering \\\\\\\\\\\\\\\\\\\\\\
+function displayWatering(watering){
 	console.log('there is a watering');
-	let thisWatering = document.getElementById("WateringDetails");
-	console.log(thisWatering);
-	var h2= document.createElement('h2');
-	let ul= document.createElement('ul');
-	let li1= document.createElement('li');
-	let li2= document.createElement('li');
-	let li3= document.createElement('li');
+	var wateringDetails= document.getElementById('wateringDetails');
+	wateringDetails.textContent='';
+	var displayForm= document.createElement('form');
+	displayForm.name= 'displayForm';// do I need for appending or referencing later?
+
+	let wateringID = document.createElement('input');
+	let lblId= displayForm.appendChild(document.createElement('label'));
+	lblId.textContent='Id:';
+	wateringID.name= 'wateringID';
+	wateringID.type= 'number'
+	wateringID.value= watering.id;
+	displayForm.appendChild(wateringID);
+
+	displayForm.appendChild(document.createElement('br'));
+
+	let wateringDate= document.createElement('input');
+	let lblDate= displayForm.appendChild(document.createElement('label'));
+	lblDate.textContent='Date:';
+	wateringDate.name= 'date';
+	wateringDate.type= 'date';
+	wateringDate.value= watering.date;
+	displayForm.appendChild(wateringDate);
+
+	displayForm.appendChild(document.createElement('br'));
+
+	let wateringInches= document.createElement('input');
+	let lblInches= displayForm.appendChild(document.createElement('label'));
+	lblInches.textContent='Amount (inches):';
+	wateringInches.name= 'inches';
+	wateringInches.type= 'number';
+	wateringInches.value= watering.inches;
+	displayForm.appendChild(wateringInches);
+
+	displayForm.appendChild(document.createElement('br'));
+
+	//TODO make these radio buttons
+	let wateringType= document.createElement('input');
+	let lblType= displayForm.appendChild(document.createElement('label'));
+	lblType.textContent='wasRain (true/false):';
+	wateringType.name= 'isRain';
+	wateringType.type= 'text';
+	wateringType.value= watering.rain;
+	displayForm.appendChild(wateringType);
+
+	displayForm.appendChild(document.createElement('br'));
+
+	let wateringDuration= document.createElement('input');
+	let lblDuration= displayForm.appendChild(document.createElement('label'));
+	lblDuration.textContent='Duration (hours):';
+	wateringDuration.name= 'duration';
+	wateringDuration.type= 'number';
+	wateringDuration.value= watering.duration;
+	displayForm.appendChild(wateringDuration);
+
+	displayForm.appendChild(document.createElement('br'));
 	
-	h2.textContent= watering.date;
-	thisWatering.appendChild(h2);
+	let wateringObservations= document.createElement('input');
+	let lblObservations= displayForm.appendChild(document.createElement('label'));
+	lblObservations.textContent='Additional Observations:';
+	wateringObservations.name= 'observations';
+	wateringObservations.type= 'text';
+	wateringObservations.value= watering.observations;
+	displayForm.appendChild(wateringObservations);
 	
-	
-	let isRain;
-	if(watering.rain === true){
-		isRain= 'rain water.'
-	}
-	else if(watering.rain === false){
-		isRain= 'hose water.'
-	}
-	li1.textContent = 'Watering Amount: '+watering.inches+' inches of '+isRain;
-	ul.appendChild(li1);
-	
-	li2.textContent = 'Watering Timeframe: '+watering.duration+' hours';
-	ul.appendChild(li2);
-	
-	li3.textContent = 'Lawn Observations: '+watering.observations;
-	ul.appendChild(li3);
-	
-	thisWatering.appendChild(ul);
-}
-//Displays in the Entry Form
-function populateAWatering(watering){
-	console.log('form is populating');
-	let form= document.newWatering;
-	form.wId.textContent= watering.id;
-	form.date.textContent= watering.date;
-	form.isRain.value= watering.isRain;
-	form.inches.textContent= watering.inches;
-	form.duration.textContent= watering.duration;
-	form.observations.textContent= watering.observations; 
+	displayForm.appendChild(document.createElement('br'));
+
+	//TODO Maybe make this button instead of input, but input type submit is a button
+	let editButton= document.createElement('input');//is this input or button?
+	editButton.name= 'editButton';
+	editButton.type= 'submit';
+	editButton.value= 'Edit Entry';
+	displayForm.appendChild(editButton);
+	editButton.addEventListener('click', function(e){
+		e.preventDefault();
+		editWatering(wateringID.value);
+	});
+
+	let deleteButton= document.createElement('input');
+	deleteButton.name= 'deleteButton';
+	deleteButton.type= 'submit';
+	deleteButton.value= 'Delete Entry';
+	displayForm.appendChild(deleteButton);
+	deleteButton.addEventListener('click', function(e){
+		e.preventDefault();
+		deleteWatering(wateringID.value);
+	});
+
+	let formTitle= document.createElement('h4');
+	formTitle.textContent='Edit / Delete:';
+
+	wateringDetails.appendChild(formTitle);
+	wateringDetails.appendChild(displayForm);
 
 }
 
-////////// GET ONE FOR POPULATING FORM FOR UPDATES \\\\\\\\\\\\\\\\\\\\\\\\\\
-// From Event Listener for input box 'change' or unfocused
+
+
+
+
+
+
+
 
 
 
@@ -228,38 +327,48 @@ function addWatering(createdWatering){
 
 }
 
+
+
+
+
+
+
+
+
+
+
 //////////// UPDATE AN ENTRY \\\\\\\\\\\\\\\\\\\\\\\\\\
-//Step 1 collect the data
-function changeWatering(e){
-	e.preventDefault();
-	let form = document.newWatering;
-	let watering= {};
+function editWatering(wateringID){
+		editedWatering= {};
 
-	if (form.date.value !=='' && form.inches.value !== '' 
-		&& form.duration !== '' && form.wId !== ''){
-		watering.date = form.date.value;
-		watering.inches= form.inches.value;
-		watering.duration= form.duration.value;
-		watering.isRain= form.isRain.value;
-		watering.observations= form.observations.value;
+	if (displayForm.date.value !=='' && displayForm.inches.value !== '' 
+		&& form.duration !== '' && (displayForm.isRain.value === 'true' || displayForm.isRain.value === 'false')){
+		editedWatering.date = displayForm.date.value;
+		editedWatering.inches= displayForm.inches.value;
+		editedWatering.duration= displayForm.duration.value;
+		editedWatering.isRain= displayForm.isRain.value;
+		editedWatering.observations= displayForm.observations.value;
 	}
-
-	editWatering(watering);
-
+	else{
+		let errorSpot = document.getElementById("errorDiv");
+		errorSpot.textContent = 'Incomplete or Incompatible Edit to Entry';
+	}
+	sendEditWatering(editedWatering, wateringID);
 }
-
-function editWatering(updatedWatering){
+function sendEditWatering(newWatering, wateringID){
 	let xhr= new XMLHttpRequest();
-	xhr.open('PUT', 'api/waterings/'+this.updatedWatering.id);
+	xhr.open('PUT', 'api/waterings/'+wateringID);
 	xhr.setRequestHeader('Content-type', 'application/json');
+	
+	let wateringJSON= JSON.stringify(newWatering);
+	
 	xhr.onreadystatechange= function(){
 		if(xhr.readyState === 4){
 			if(xhr.status=== 200 | xhr.status === 201){
 				let newerWatering= JSON.parse(xhr.responseText);
 				console.log("Watering Successfully Updated");
-				document.newWatering.reset();
 				getAllWaterings();
-				displayAWatering(newerWatering);
+				displayWatering(newerWatering);
 			}
 			else{
 				console.log("Watering Entry Update Failed.");
@@ -268,31 +377,37 @@ function editWatering(updatedWatering){
 
 		}
 	}
-	let waterJSON= JSON.stringify(newerWatering);
-	xhr.send(waterJSON);
+	xhr.send(wateringJSON);
 }
 
+
+
+
+
+
+
+
+
+
 //////////////////////// DELETE WATERING ENTRY \\\\\\\\\\\\\\\
-function deleteWatering(e){
-	e.preventDefault();
+function deleteWatering(wateringID){
 
 	let xhr = new XMLHttpRequest();
-	xhr.open('DELETE', 'api/waterings/' + this.watering.id);
-	xhr.setRequestHeader('Content-type', 'application/json');
+	xhr.open('DELETE', 'api/waterings/' + wateringID);
 	xhr.onreadystatechange = function(){
 		if(xhr.readyState === 4){
 			if(xhr.status === 200 || xhr.status === 204){
 				console.log('ENTRY DELETED');
-				let form = document.newWatering;
-				form.reset();
+				displayForm.reset();
+				getAllWaterings();
 			}
 			else{
-				console.log("DELETE FAILED");
-				console.error(xhr.status+': '+xhr.responseText);
+				let errorSpot = document.getElementById("errorDiv");
+				errorSpot.textContent = 'DELETE FAILED: '+xhr.status+': '+xhr.responseText;
 			}
 		}
 	}
-	xhr.send(null);
+	xhr.send();
 }
 
 

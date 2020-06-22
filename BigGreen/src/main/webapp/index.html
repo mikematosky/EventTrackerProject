@@ -10,26 +10,13 @@
 	
 	<h1>Big Green Watering App</h1>
 	
-	<form name= "searchForm">
-		<label for="searchID">Watering ID: </label>
-		<input type="text" name="searchID" id="searchID" size="4"/>
-		<input type="submit" name="wateringSearch"/>	
-	</form>
-	<hr>
-	
-	<div id="WateringDetails"></div>
 	<div id="errorDiv"></div>
 
-	<hr>
-	<div id="WateringsTable">
-		<table>
-			<thead id="tableHead"></thead>
-			<tbody id="tableBody"></tbody>
-		</table>
-	</div>
+	<div id="wateringsList"></div>
 	<hr>
 	<br>
 	<br>
+
 	<div id="createWatering">
 		<h4>Create a Watering: </h4>
 		<form name="newWatering">
@@ -38,7 +25,7 @@
 					<tr>
 						<td>
 							<label for="wId">Entry ID: </label>
-							<input type="number" name="wId" id="wId" size=4 readonly/>
+							<input type="number" name="wId" id="wId" readonly/>
 						</td>
 					</tr>
 					<tr>
@@ -75,9 +62,7 @@
 					</tr>
 					<tr>
 						<td>
-							<input type="button" id="createWateringButton" name="createWateringButton"/>
-							<input type="button" name="editWateringButton" id="editWateringButton"/>
-							<input type="button" id="deleteWateringButton" name="deleteWateringButton"/>
+							<input type="submit" name="createWateringButton" value="Add"/>
 						</td>
 					</tr>
 				</tbody>
@@ -85,13 +70,7 @@
 		</form>
 	</div>
 
-
-
-
-
-
-
-
+	<div id="wateringDetails"></div>
 
 </body>
 </html>

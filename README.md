@@ -53,6 +53,7 @@
 * Postman
 * MAMP
 * Git/Github
+* AJAX
 
 ## Lessons Learned
 * Incorporating a JPA repository
@@ -62,3 +63,5 @@
 * Testing with Postman and JUnit 5
 * JSON formatting for POST and PUT inputs
 * More fancy markdown techniques for README
+* Creating tables and forms using AJAX
+* Adding EventListeners for Front-End Interactability
